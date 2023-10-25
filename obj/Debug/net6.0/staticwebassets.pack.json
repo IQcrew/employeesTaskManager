@@ -13,6 +13,30 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\IT\\Programovanie_amater\\projects\\employeesTaskManager\\wwwroot\\images\\Artboard1.png",
+      "PackagePath": "staticwebassets\\images\\Artboard1.png"
+    },
+    {
+      "Id": "C:\\IT\\Programovanie_amater\\projects\\employeesTaskManager\\wwwroot\\images\\Artboard2.png",
+      "PackagePath": "staticwebassets\\images\\Artboard2.png"
+    },
+    {
+      "Id": "C:\\IT\\Programovanie_amater\\projects\\employeesTaskManager\\wwwroot\\images\\Artboard3.png",
+      "PackagePath": "staticwebassets\\images\\Artboard3.png"
+    },
+    {
+      "Id": "C:\\IT\\Programovanie_amater\\projects\\employeesTaskManager\\wwwroot\\images\\Artboard4.png",
+      "PackagePath": "staticwebassets\\images\\Artboard4.png"
+    },
+    {
+      "Id": "C:\\IT\\Programovanie_amater\\projects\\employeesTaskManager\\wwwroot\\images\\Artboard5.png",
+      "PackagePath": "staticwebassets\\images\\Artboard5.png"
+    },
+    {
+      "Id": "C:\\IT\\Programovanie_amater\\projects\\employeesTaskManager\\wwwroot\\images\\logo.png",
+      "PackagePath": "staticwebassets\\images\\logo.png"
+    },
+    {
       "Id": "C:\\IT\\Programovanie_amater\\projects\\employeesTaskManager\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

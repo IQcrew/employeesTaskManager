@@ -2,7 +2,101 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body>
+    <br />
+    <div class="container-fluid p-0">
+        <div class="row m-0">
+            <div class="col-md-6 animate__animated animate__fadeInLeft">
+                <h1>Vitajte v Správcovi úloh zamestnancov</h1>
+                <p class="lead">Umožnite svojmu tímu efektívne spravovať úlohy.</p>
+            </div>
+            <div class="col-md-6 animate__animated animate__fadeInRight">
+                <img src="~/images/Artboard1.png" alt="Obrázok Správcu úloh" class="img-fluid" />
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row m-0">
+            <div class="col-md-6 animate__animated animate__fadeInLeft">
+                <img src="~/images/Artboard2.png" alt="Obrázok Teamwork" class="img-fluid" />
+            </div>
+            <div class="col-md-6 animate__animated animate__fadeInRight">
+                <h2>Zjednošte tok vášho tímu</h2>
+                <p>Efektívne spravujte úlohy, zlepšujte spoluprácu a zvyšujte produktivitu s naším nástrojom na správu úloh.</p>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row m-0">
+            <div class="col-md-6 animate__animated animate__fadeInLeft">
+                <h2>Zostaňte organizovaní</h2>
+                <p>Sledujte svoje úlohy, termíny a pokrok zopár kliknutiamy.</p>
+            </div>
+            <div class="col-md-6 animate__animated animate__fadeInRight">
+                <img src="~/images/Artboard3.png" alt="Obrázok Organizácie"  />
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row m-0">
+            <div class="col-md-6 animate__animated animate__fadeInLeft">
+                <img src="~/images/Artboard4.png" alt="Obrázok Citácie" class="img-fluid" />
+            </div>
+            <div class="col-md-6 animate__animated animate__fadeInRight">
+                <blockquote>
+                    <p class="mb-0">"Dobre tímy sa stávajú skvelými, keď sa členovia vzájomne dôverujú dostatočne na to, aby sa vzdali JA za MI."</p>
+                    <br />                    
+                    <h5 class="blockquote-footer">Phil Jackson</h5>
+                </blockquote>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div class="row m-0">
+            <div class="col-md-6 animate__animated animate__fadeInLeft">
+                <h2>Všetko na jednom mieste</h2>
+                <p>Zjednošte svoje úlohy, termíny, a produktivitu na jednom mieste. S naším nástrojom spravujete všetko jednoducho.</p>
+            </div>
+            <div class="col-md-6 animate__animated animate__fadeInRight">
+                <img src="~/images/Artboard5.png" alt="Obrázok Všetko na jednom mieste"  />
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Include this script at the end of your body
+        document.addEventListener('DOMContentLoaded', function () {
+            // Add animate__animated class to your elements after the DOM is loaded
+            document.querySelectorAll('.animate__animated').forEach(function (element) {
+                element.classList.add('animate__fadeIn');
+            });
+        });
+    </script>
+</body>
+<style>
+
+
+    .container-fluid {
+        padding: 0;
+    }
+
+    .img-fluid {
+
+        max-width: 100%;
+        height: auto;
+        box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.1); /* Adjust the values for the desired shadow effect */
+    }
+</style>
+</html>
