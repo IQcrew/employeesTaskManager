@@ -5,6 +5,7 @@
 }
 
 <style>
+
     .custom-registration-container {
         background-color: #ffffff;
     }
@@ -39,6 +40,9 @@
             border-color: #007bff;
             box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
         }
+
+
+
 </style>
 
 <div class="custom-registration-container container">
@@ -53,25 +57,39 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <div class="mb-3">
-                    <label asp-for="Input.Email" class="custom-form-label form-label"></label>
+                    <label asp-for="Input.FirstName" class="custom-form-label form-label">Meno</label>
+                    <input asp-for="Input.FirstName" class="form-control" aria-required="true" />
+                    <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.LastName" class="custom-form-label form-label">Priezvisko</label>
+                    <input asp-for="Input.LastName" class="form-control" aria-required="true" />
+                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Input.Email" class="custom-form-label form-label">E-mail</label>
                     <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Input.Password" class="custom-form-label form-label"></label>
+                    <label asp-for="Input.Password" class="custom-form-label form-label">Heslo</label>
                     <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Input.ConfirmPassword" class="custom-form-label form-label"></label>
+                    <label asp-for="Input.ConfirmPassword" class="custom-form-label form-label">Potvrdenie hesla</label>
                     <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" />
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
 
                 <button id="registerSubmit" type="submit" class="w-100 custom-btn-primary btn btn-lg btn-primary">Registrovať sa</button>
             </form>
+
+
         </div>
     </div>
 </div>

@@ -54,13 +54,13 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <div class="mb-3">
-                    <label asp-for="Input.Email" class="custom-form-label form-label"></label>
+                    <label asp-for="Input.Email" class="custom-form-label form-label">E-mail</label>
                     <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Input.Password" class="custom-form-label form-label"></label>
+                    <label asp-for="Input.Password" class="custom-form-label form-label">Heslo</label>
                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
@@ -68,7 +68,7 @@
                 <div class="checkbox">
                     <label asp-for="Input.RememberMe" class="custom-form-label">
                         <input class="form-check-input" asp-for="Input.RememberMe" />
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        Zapamätať si ma
                     </label>
                 </div>
 
@@ -81,13 +81,11 @@
                         <a id="forgotPassword" asp-page="./ForgotPassword">Zabudli ste heslo?</a>
                     </p>
                     <p>
-                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrovať nového používateľa</a>
-                    </p>
-                    <p>
-                        <a id="resendConfirmation" asp-page="./ResendEmailConfirmation">Znova odoslať potvrdzovací email</a>
+                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrovať sa</a>
                     </p>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
