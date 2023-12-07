@@ -3,6 +3,8 @@
 #nullable disable
 
 using System;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -71,9 +73,35 @@ namespace employeesTaskManager.Areas.Identity.Pages.Account
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                     protocol: Request.Scheme);
+                SendConfirmationEmail(email, EmailConfirmationUrl);
             }
 
             return Page();
+        }
+        public void SendConfirmationEmail(string to, string confirmationCode)
+        {
+            MailAddress reciver = new MailAddress(to);
+            MailAddress from = new MailAddress("itiqcrew@gmail.com");
+
+            MailMessage email = new MailMessage(from, reciver);
+            email.Subject = "Email verification";
+            email.Body = confirmationCode;
+
+            SmtpClient smtp = new SmtpClient();
+            smtp.Host = "smtp.gmail.com";
+            smtp.Port = 587;
+            smtp.Credentials = new NetworkCredential("itiqcrew@gmail.com", "kcoyjzdjrmbvhqiw");
+            smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
+            smtp.EnableSsl = true;
+
+            try
+            {
+                smtp.Send(email);
+            }
+            catch (SmtpException ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
     }
 }
