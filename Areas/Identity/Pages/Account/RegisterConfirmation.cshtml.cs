@@ -80,12 +80,81 @@ namespace employeesTaskManager.Areas.Identity.Pages.Account
         }
         public void SendConfirmationEmail(string to, string confirmationCode)
         {
+            string emailHtml = 
+                $@"<!DOCTYPE html>
+                <html lang=""sk"">
+                <head>
+                    <meta charset=""UTF-8"">
+                    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
+                    <title>Potvrdenie E-mailu</title>
+                    <style>
+                        body {{
+                            font-family: 'Arial', sans-serif;
+                            background-color: #f4f4f4;
+                            margin: 0;
+                            padding: 0;
+                        }}
+
+                        .container {{
+                            width: 80%;
+                            margin: 0 auto;
+                            background-color: #ffffff;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                            margin-top: 50px;
+                        }}
+
+                        h1 {{
+                            color: #333;
+                        }}
+
+                        p {{
+                            color: #555;
+                        }}
+
+                        .confirmation-code {{
+                            background-color: #007bff;
+                            color: #ffffff;
+                            padding: 10px;
+                            border-radius: 5px;
+                            font-size: 18px;
+                            margin-top: 20px;
+                            cursor: pointer;
+                        }}
+
+                        a {{
+                            color: #007bff;
+                            text-decoration: none;
+                        }}
+
+                        .footer {{
+                            margin-top: 20px;
+                            text-align: center;
+                            color: #888;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class=""container"">
+                        <h1>Potvrdenie E-mailu</h1>
+                        <p>Ďakujeme za registráciu na našom webe. Prosím, použite nižšie uvedený potvrdzovací kód na overenie Vášho e-mailu:</p><br/>
+                        <a class=""confirmation-code"" href=""{confirmationCode}"">Potvrdiť</a>
+                        <br/>
+                        <br/>
+                        <p>Ak ste sa na našom webe neregistrovali, prosím, tento e-mail ignorujte.</p>
+                    </div>
+                </body>
+                </html>
+                ";
+
             MailAddress reciver = new MailAddress(to);
             MailAddress from = new MailAddress("itiqcrew@gmail.com");
 
             MailMessage email = new MailMessage(from, reciver);
             email.Subject = "Email verification";
-            email.Body = confirmationCode;
+            email.IsBodyHtml = true;
+            email.Body = emailHtml;
 
             SmtpClient smtp = new SmtpClient();
             smtp.Host = "smtp.gmail.com";

@@ -82,14 +82,14 @@ namespace employeesTaskManager.Areas.Identity.Pages.Account
 
             [Required(ErrorMessage = "First name is required.")]
             [Display(Name = "First Name")]
-            [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
             public string FirstName { get; set; }
 
 
 
             [Required(ErrorMessage = "Last name is required.")]
             [Display(Name = "Last Name")]
-            [StringLength(20, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
+            [StringLength(40, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 4)]
             public string LastName { get; set; }
 
 
