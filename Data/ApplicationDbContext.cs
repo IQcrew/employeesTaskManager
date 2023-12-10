@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using employeesTaskManager.Models;
 
 namespace employeesTaskManager.Data
 {
@@ -9,6 +10,7 @@ namespace employeesTaskManager.Data
             : base(options)
         {
         }
+        public DbSet<employeesTaskManager.Models.WorkTask>? WorkTask { get; set; }
 
         // DbSet properties for your custom entities, if any
     }
