@@ -11,6 +11,7 @@ namespace employeesTaskManager.Data
         {
         }
         public DbSet<employeesTaskManager.Models.WorkTask>? WorkTask { get; set; }
+        public DbSet<employeesTaskManager.Models.ManageFirm>? ManageFirm { get; set; }
 
         // DbSet properties for your custom entities, if any
     }
