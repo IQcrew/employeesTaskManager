@@ -58,8 +58,9 @@ namespace employeesTaskManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,ContactEmail")] ManageFirm manageFirm)
         {
-            if (ModelState.IsValid)
+            if (manageFirm.Name != "")
             {
+                manageFirm.Id = Guid.NewGuid().ToString();
                 _context.Add(manageFirm);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

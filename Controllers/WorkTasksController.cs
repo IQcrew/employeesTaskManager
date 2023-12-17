@@ -58,8 +58,9 @@ namespace employeesTaskManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Status,Company,DeadLine,EmployeeName")] WorkTask workTask)
         {
-            if (ModelState.IsValid)
+            if ( workTask.Company != "")
             {
+                workTask.Id = Guid.NewGuid().ToString();
                 _context.Add(workTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
