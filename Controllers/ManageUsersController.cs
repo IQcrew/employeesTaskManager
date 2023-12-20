@@ -9,6 +9,7 @@ using employeesTaskManager.Data;
 using employeesTaskManager.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace employeesTaskManager.Controllers
 {
@@ -17,73 +18,92 @@ namespace employeesTaskManager.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public ManageUsersController(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public ManageUsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+
+
 
         // GET: ManageUsers
         public async Task<IActionResult> Index()
         {
+            List<ManageUser> res = new List<ManageUser>();
+            var users = _userManager.Users;
+            foreach (var user in users)
+            {
+                ManageUser tempUser = new ManageUser();
+                tempUser.UserId = user.Id;
+                var temp = _context.ManageUser.Where(x => x.UserId == user.Id).ToList();
+                if(temp.Count == 1)
+                {
+                    tempUser.CompanyId = temp[0].CompanyId;
+                }
+                else
+                {
+                    tempUser.CompanyId = null;
+                }
+                res.Add(tempUser);
+            }
+
+
               return _context.ManageUser != null ? 
-                          View(await _context.ManageUser.ToListAsync()) :
+                          View(res) :
                           Problem("Entity set 'ApplicationDbContext.ManageUser'  is null.");
         }
-
-        // GET: ManageUsers/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> SearchResults(string searchString)
         {
-            if (id == null || _context.ManageUser == null)
+            List<ManageUser> res = new List<ManageUser>();
+            var users = _userManager.Users;
+            foreach (var user in users)
             {
-                return NotFound();
-            }
 
-            var manageUser = await _context.ManageUser
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (manageUser == null)
-            {
-                return NotFound();
+                if(!new string[] { user.Email.ToLower(), user.FirstName.ToLower(), user.LastName.ToLower()}.Any(x => x.Contains(searchString.ToLower()))) { continue; }
+                ManageUser tempUser = new ManageUser();
+                tempUser.UserId = user.Id;
+                var temp = _context.ManageUser.Where(x => x.UserId == user.Id).ToList();
+                if (temp.Count == 1)
+                {
+                    tempUser.CompanyId = temp[0].CompanyId;
+                }
+                else
+                {
+                    tempUser.CompanyId = "-1";
+                }
+                res.Add(tempUser);
             }
-
-            return View(manageUser);
+            return _context.ManageUser != null ?
+                        View("Index",res) :
+                        Problem("Entity set 'ApplicationDbContext.ManageUser'  is null.");
         }
 
-        // GET: ManageUsers/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: ManageUsers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,UserId,CompanyId")] ManageUser manageUser)
+        private int GetNextUserId()
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(manageUser);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(manageUser);
+            // You need to implement your logic to get the next unique integer
+            // This is a simplistic example, you may need to adjust it based on your needs
+            var maxId = _context.ManageUser.Max(u => (int?)u.Id) ?? 0;
+            return maxId + 1;
         }
-
         // GET: ManageUsers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(string id)
         {
             if (id == null || _context.ManageUser == null)
             {
                 return NotFound();
             }
-
-            var manageUser = await _context.ManageUser.FindAsync(id);
-            if (manageUser == null)
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+            var temp = new complexUser() { FirstName = user.FirstName, LastName = user.LastName, UserId = id, Email = user.Email};
+            var tempContext = _context.ManageUser.FirstOrDefault(x => x.UserId == id);
+            if (tempContext != null)
             {
-                return NotFound();
+                temp.CompanyId = tempContext.CompanyId;
             }
-            return View(manageUser);
+
+
+            return View(temp);
         }
 
         // POST: ManageUsers/Edit/5

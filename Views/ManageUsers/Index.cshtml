@@ -1,39 +1,45 @@
 ﻿@model IEnumerable<employeesTaskManager.Models.ManageUser>
-
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UsrManager
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
+<form asp-action="SearchResults">
+    <label for="searchInput">Search:</label>
+    <input type="text" name="searchString" >
+    <button type="submit">Search</button>
+</form>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.UserId)
+                Meno
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CompanyId)
+                Email
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.UserId)
+
+            <tr>
+                <td>
+                    @{
+                        var tempUser = UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId);
+                        string name = $"{tempUser.FirstName} {tempUser.LastName}";
+                    }
+                @name
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CompanyId)
+                    @Html.DisplayFor(modelItem => UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId).Email)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a>
             </td>
         </tr>
 }

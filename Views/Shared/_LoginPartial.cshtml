@@ -9,24 +9,25 @@
     
         <li class="nav-item">
             @{
+                
                 var user = await UserManager.FindByNameAsync(User.Identity.Name);
-                bool role = await UserManager.IsInRoleAsync(user, "Admin");
+                bool hasAdminRole = await UserManager.IsInRoleAsync(user, "Admin");
                 if (user != null)
                 {
-                    if (role)
+                    if (hasAdminRole)
                     {
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Identity" asp-controller="ManageFirms" title="Manage">Upraviť firmy</a>
+                        <a class="nav-link text-dark" asp-controller="ManageFirms" asp-action="Index" title="Manage">Upraviť firmy</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Identity" asp-controller="ManageUsers" title="Manage">Dobrý deň @user.FirstName</a>
+                        <a class="nav-link text-dark" asp-controller="ManageUsers" asp-action="Index" title="Manage">Dobrý deň @user.FirstName</a>
                     </li>
                     }
                     else
                     {
                         
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="Identity" asp-controller="WorkTasks" title="Manage">Dobrý deň @user.FirstName</a>
+                        <a class="nav-link text-dark" asp-controller="WorkTasks" asp-action="Index" title="Manage">Dobrý deň @user.FirstName</a>
                     </li>
                     }
                 }

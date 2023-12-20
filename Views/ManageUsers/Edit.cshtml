@@ -1,4 +1,4 @@
-﻿@model employeesTaskManager.Models.ManageUser
+﻿@model employeesTaskManager.Models.complexUser
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,17 +12,49 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
+
+            <!-- UserId -->
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+                <input asp-for="UserId" class="form-control" readonly />
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
+
+            <!-- CompanyId Dropdown -->
             <div class="form-group">
                 <label asp-for="CompanyId" class="control-label"></label>
-                <input asp-for="CompanyId" class="form-control" />
+                @Html.DropDownListFor(model => model.CompanyId, ViewBag.CompanyList as SelectList, "Select Company", new { @class = "form-control" })
                 <span asp-validation-for="CompanyId" class="text-danger"></span>
             </div>
+
+            <!-- Role Dropdown -->
+            <div class="form-group">
+                <label asp-for="Role" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Role, ViewBag.RoleList as SelectList, "Select Role", new { @class = "form-control" })
+                <span asp-validation-for="Role" class="text-danger"></span>
+            </div>
+
+            <!-- FirstName -->
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+
+            <!-- LastName -->
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -35,5 +67,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
