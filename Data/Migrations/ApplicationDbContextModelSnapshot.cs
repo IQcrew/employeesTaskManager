@@ -113,6 +113,27 @@ namespace employeesTaskManager.Data.Migrations
                     b.ToTable("ManageFirm");
                 });
 
+            modelBuilder.Entity("employeesTaskManager.Models.ManageUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("CompanyId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ManageUser");
+                });
+
             modelBuilder.Entity("employeesTaskManager.Models.WorkTask", b =>
                 {
                     b.Property<string>("Id")

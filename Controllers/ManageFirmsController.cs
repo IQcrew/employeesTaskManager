@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using employeesTaskManager.Data;
 using employeesTaskManager.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Data;
 
 namespace employeesTaskManager.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ManageFirmsController : Controller
     {
         private readonly ApplicationDbContext _context;
