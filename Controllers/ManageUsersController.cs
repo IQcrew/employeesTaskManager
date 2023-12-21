@@ -34,6 +34,7 @@ namespace employeesTaskManager.Controllers
             var users = _userManager.Users;
             foreach (var user in users)
             {
+                if(user.Email == "admin@admin.com") { continue; }
                 ManageUser tempUser = new ManageUser();
                 tempUser.UserId = user.Id;
                 var temp = _context.ManageUser.Where(x => x.UserId == user.Id).ToList();
@@ -47,7 +48,7 @@ namespace employeesTaskManager.Controllers
                 }
                 res.Add(tempUser);
             }
-
+            
 
               return _context.ManageUser != null ? 
                           View(res) :
@@ -82,11 +83,38 @@ namespace employeesTaskManager.Controllers
 
         private int GetNextUserId()
         {
-            // You need to implement your logic to get the next unique integer
-            // This is a simplistic example, you may need to adjust it based on your needs
             var maxId = _context.ManageUser.Max(u => (int?)u.Id) ?? 0;
             return maxId + 1;
         }
+
+        private async Task changeUserFirm(string userId, string firmId)
+        {
+            var findConnection = _context.ManageUser.FirstOrDefault(x => x.UserId == userId);
+            if (findConnection != null)
+            {
+                if (firmId == "None")
+                {
+                    _context.ManageUser.Remove(findConnection);
+                }
+                else
+                {
+                    findConnection.CompanyId = firmId;
+                    _context.ManageUser.Update(findConnection);
+                }
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                if (firmId != "None")
+                {
+                    _context.Add(new ManageUser() { UserId = userId, CompanyId = firmId });
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+        }
+
+
         // GET: ManageUsers/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
@@ -97,12 +125,10 @@ namespace employeesTaskManager.Controllers
             var user = _userManager.Users.FirstOrDefault(x => x.Id == id);
             var temp = new complexUser() { FirstName = user.FirstName, LastName = user.LastName, UserId = id, Email = user.Email};
             var tempContext = _context.ManageUser.FirstOrDefault(x => x.UserId == id);
-            if (tempContext != null)
-            {
-                temp.CompanyId = tempContext.CompanyId;
-            }
-
-
+            temp.CompanyId = tempContext ==null ? "None" : tempContext.CompanyId;
+            var userRoles = await _userManager.GetRolesAsync(user);
+            temp.Role = userRoles.Count == 1 ? userRoles[0] : "None";
+            temp.Firms = await _context.ManageFirm.ToListAsync();
             return View(temp);
         }
 
@@ -111,34 +137,21 @@ namespace employeesTaskManager.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,UserId,CompanyId")] ManageUser manageUser)
+        public async Task<IActionResult> Edit(complexUser input)
         {
-            if (id != manageUser.Id)
+            var user = await _userManager.FindByIdAsync(input.UserId);
+            await changeUserFirm(input.UserId, input.CompanyId);
+            user.Email = input.Email;
+            user.FirstName = input.FirstName;
+            user.LastName = input.LastName;
+            var result = await _userManager.UpdateAsync(user);
+            await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
+            if (input.Role != "None")
             {
-                return NotFound();
+                await _userManager.AddToRoleAsync(user, input.Role);
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(manageUser);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ManageUserExists(manageUser.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(manageUser);
+            return RedirectToAction("Index");
         }
 
         // GET: ManageUsers/Delete/5

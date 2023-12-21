@@ -4,6 +4,7 @@ namespace employeesTaskManager.Models
 {
     public class ManageUser
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         [ForeignKey("AspNetUsers")]
         public string UserId { get; set; }
