@@ -22,7 +22,15 @@
             <th>
                 Email
             </th>
-            <th></th>
+            <th>
+                Firma
+            </th>
+            <th>
+                
+            </th>
+            <th>
+
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -35,13 +43,17 @@
                         string name = $"{tempUser.FirstName} {tempUser.LastName}";
                     }
                 @name
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId).Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a>
-            </td>
+                </td>
+                <td>
+                        @Html.DisplayFor(modelItem => UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId).Email)
+                </td>
+                <td>
+                    @item.CompanyId
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.UserId" style="color: red;">Delete</a>
+                </td>
         </tr>
 }
     </tbody>

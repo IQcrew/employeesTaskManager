@@ -10,6 +10,7 @@ namespace employeesTaskManager.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public bool IsEmailConfirmed { get; set; }
         public List<ManageFirm> Firms { get; set; }
     }
 }

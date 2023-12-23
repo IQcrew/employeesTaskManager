@@ -59,6 +59,13 @@
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+            <!-- Email Confirmation Status -->
+            <div class="form-group">
+                <div>
+                    <input asp-for="IsEmailConfirmed" type="checkbox" id="isConfirmedCheckbox" />
+                    <label asp-for="IsEmailConfirmed" class="control-label">Is Confirmed</label>
+                </div>
+            </div>
 
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -75,4 +82,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // Optional: If you want to initialize the checkbox based on the initial value of IsEmailConfirmed
+        document.getElementById('isConfirmedCheckbox').checked = @Model.IsEmailConfirmed.ToString().ToLower();
+
+        // Optional: If you want to update the label based on the initial value of IsEmailConfirmed
+        document.querySelector('label[for="isConfirmedCheckbox"]').innerText = @((Model.IsEmailConfirmed) ? "Is Confirmed" : "Is Not Confirmed");
+    </script>
+    <style>
+
+        #isConfirmedCheckbox:checked + label {
+            color: green; /* Change color when checked */
+        }
+
+        #isConfirmedCheckbox:not(:checked) + label {
+            color: red; /* Change color when not checked */
+        }
+    </style>
 }

@@ -40,11 +40,11 @@ namespace employeesTaskManager.Controllers
                 var temp = _context.ManageUser.Where(x => x.UserId == user.Id).ToList();
                 if(temp.Count == 1)
                 {
-                    tempUser.CompanyId = temp[0].CompanyId;
+                    tempUser.CompanyId = _context.ManageFirm.FirstOrDefault(x => x.Id == temp[0].CompanyId).Name;
                 }
                 else
                 {
-                    tempUser.CompanyId = null;
+                    tempUser.CompanyId = "";
                 }
                 res.Add(tempUser);
             }
@@ -61,18 +61,18 @@ namespace employeesTaskManager.Controllers
             foreach (var user in users)
             {
 
-                if(!new string[] { user.Email.ToLower(), user.FirstName.ToLower(), user.LastName.ToLower()}.Any(x => x.Contains(searchString.ToLower()))) { continue; }
                 ManageUser tempUser = new ManageUser();
                 tempUser.UserId = user.Id;
                 var temp = _context.ManageUser.Where(x => x.UserId == user.Id).ToList();
                 if (temp.Count == 1)
                 {
-                    tempUser.CompanyId = temp[0].CompanyId;
+                    tempUser.CompanyId = _context.ManageFirm.FirstOrDefault(x => x.Id == temp[0].CompanyId).Name;
                 }
                 else
                 {
-                    tempUser.CompanyId = "-1";
+                    tempUser.CompanyId = "";
                 }
+                if(!new string[] { user.Email.ToLower(), user.FirstName.ToLower(), user.LastName.ToLower(), tempUser.CompanyId.ToLower()}.Any(x => x.Contains(searchString.ToLower()))) { continue; }
                 res.Add(tempUser);
             }
             return _context.ManageUser != null ?
@@ -123,7 +123,7 @@ namespace employeesTaskManager.Controllers
                 return NotFound();
             }
             var user = _userManager.Users.FirstOrDefault(x => x.Id == id);
-            var temp = new complexUser() { FirstName = user.FirstName, LastName = user.LastName, UserId = id, Email = user.Email};
+            var temp = new complexUser() { FirstName = user.FirstName, LastName = user.LastName, UserId = id, Email = user.Email, IsEmailConfirmed = user.EmailConfirmed};
             var tempContext = _context.ManageUser.FirstOrDefault(x => x.UserId == id);
             temp.CompanyId = tempContext ==null ? "None" : tempContext.CompanyId;
             var userRoles = await _userManager.GetRolesAsync(user);
@@ -144,6 +144,7 @@ namespace employeesTaskManager.Controllers
             user.Email = input.Email;
             user.FirstName = input.FirstName;
             user.LastName = input.LastName;
+            user.EmailConfirmed = input.IsEmailConfirmed;
             var result = await _userManager.UpdateAsync(user);
             await _userManager.RemoveFromRolesAsync(user, await _userManager.GetRolesAsync(user));
             if (input.Role != "None")
@@ -155,40 +156,72 @@ namespace employeesTaskManager.Controllers
         }
 
         // GET: ManageUsers/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(string id)
         {
             if (id == null || _context.ManageUser == null)
             {
                 return NotFound();
             }
-
-            var manageUser = await _context.ManageUser
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (manageUser == null)
-            {
-                return NotFound();
-            }
-
-            return View(manageUser);
+            var user = _userManager.Users.FirstOrDefault(x => x.Id == id);
+            var temp = new complexUser() { FirstName = user.FirstName, LastName = user.LastName, UserId = id, Email = user.Email, IsEmailConfirmed = user.EmailConfirmed };
+            var tempContext = _context.ManageUser.FirstOrDefault(x => x.UserId == id);
+            temp.CompanyId = tempContext == null ? "None" : tempContext.CompanyId;
+            var userRoles = await _userManager.GetRolesAsync(user);
+            temp.Role = userRoles.Count == 1 ? userRoles[0] : "None";
+            temp.Firms = await _context.ManageFirm.ToListAsync();
+            return View(temp);
         }
 
         // POST: ManageUsers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(string userId)
         {
-            if (_context.ManageUser == null)
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.ManageUser'  is null.");
+                // Handle the case where the user is not found
+                return NotFound();
             }
-            var manageUser = await _context.ManageUser.FindAsync(id);
+
+            // Delete associated WorkTasks
+            var userWorkTasks = _context.WorkTask.Where(wt => wt.Employee == user);
+            _context.WorkTask.RemoveRange(userWorkTasks);
+
+            // Delete associated ManageUser
+            var manageUser = _context.ManageUser.FirstOrDefault(mu => mu.UserId == user.Id);
             if (manageUser != null)
             {
                 _context.ManageUser.Remove(manageUser);
             }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            // Get all roles for the user
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            // Remove the user from all roles
+            foreach (var role in userRoles)
+            {
+                await _userManager.RemoveFromRoleAsync(user, role);
+            }
+
+            // Delete the user
+            var result = await _userManager.DeleteAsync(user);
+
+            if (result.Succeeded)
+            {
+                // Save changes to the database
+                await _context.SaveChangesAsync();
+
+                // User successfully deleted
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                // Handle the case where user deletion failed
+                // You may want to inspect the errors in result.Errors
+                return View("Error");
+            }
         }
 
         private bool ManageUserExists(int id)

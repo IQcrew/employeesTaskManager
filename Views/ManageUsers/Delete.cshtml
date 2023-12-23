@@ -1,32 +1,35 @@
-﻿@model employeesTaskManager.Models.ManageUser
+﻿@model employeesTaskManager.Models.complexUser
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UsrManager
 
 @{
     ViewData["Title"] = "Delete";
-}
 
+    var tempUser = UsrManager.Users.FirstOrDefault(x => x.Id == Model.UserId);
+    string name = $"{tempUser.FirstName} {tempUser.LastName}";
+}
 <h1>Delete</h1>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>ManageUser</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
+            Meno: 
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
+            @name
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CompanyId)
+            @Html.DisplayNameFor(model => model.Email)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CompanyId)
+            @Html.DisplayFor(model => model.Email)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="UserId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
