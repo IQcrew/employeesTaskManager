@@ -116,16 +116,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya1Rhc2tzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/IT/Programovanie_amater/projects/employeesTaskManager/Views/WorkTasks/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya1Rhc2tzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/IT/Programovanie_amater/projects/employeesTaskManager/Views/WorkTasks/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya1Rhc2tzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/IT/Programovanie_amater/projects/employeesTaskManager/Views/WorkTasks/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya1Rhc2tzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/IT/Programovanie_amater/projects/employeesTaskManager/Views/WorkTasks/Employee.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya1Rhc2tzXEVtcGxveWVlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/IT/Programovanie_amater/projects/employeesTaskManager/Views/WorkTasks/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV29ya1Rhc2tzXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/IT/Programovanie_amater/projects/employeesTaskManager/Views/WorkTasks/Index.cshtml]

@@ -153,6 +153,10 @@ namespace employeesTaskManager.Controllers
             if (manageFirm != null)
             {
                 _context.ManageFirm.Remove(manageFirm);
+                var allConnections = _context.ManageUser.Where(x => x.CompanyId == id);
+                _context.ManageUser.RemoveRange(allConnections);
+                var allTasks = _context.WorkTask.Where(x => x.Company ==  id);
+                _context.WorkTask.RemoveRange(allTasks);
             }
             
             await _context.SaveChangesAsync();

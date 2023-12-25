@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using employeesTaskManager.Data;
 using employeesTaskManager.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using System.Data;
 
 namespace employeesTaskManager.Controllers
@@ -17,37 +18,44 @@ namespace employeesTaskManager.Controllers
     public class WorkTasksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        UserManager<ApplicationUser> usrManager;
 
-        public WorkTasksController(ApplicationDbContext context)
+        public WorkTasksController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            usrManager = userManager;
         }
 
         // GET: WorkTasks
         public async Task<IActionResult> Index()
         {
-              return _context.WorkTask != null ? 
-                          View(await _context.WorkTask.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.WorkTask'  is null.");
+            if (User.IsInRole("Employee"))
+                return RedirectToAction("EmployeePage");
+            ApplicationUser CurrentUser = await usrManager.FindByNameAsync(User.Identity.Name);
+            var tempMU = await _context.ManageUser.FirstOrDefaultAsync(x => x.UserId == CurrentUser.Id);
+            if (tempMU == null)
+                return View("Error","Manager nemá priradenú žiadnu firmu.");
+            var firmEmployees = _context.ManageUser.Where(x => x.CompanyId == tempMU.CompanyId);
+            var EmployeeApplicationUsers = usrManager.Users.Where(x => firmEmployees.Any(y => y.UserId == x.Id));
+            List<Employee> tempList = new List<Employee>();
+            foreach (ApplicationUser item in EmployeeApplicationUsers)
+            {
+                var tempEmployee = new Employee();
+                tempEmployee.Company = _context.ManageFirm.FirstOrDefault(x => x.Id == tempMU.CompanyId);
+                tempEmployee.EmployeeId = item.Id;
+                tempEmployee.Name = $"{item.FirstName} {item.LastName}";
+                tempEmployee.Email = item.Email;
+                tempEmployee.tasks = _context.WorkTask.Where(x => x.Employee == item).ToList();
+                tempList.Add(tempEmployee);
+            }
+            return View(tempList);
         }
-
-        // GET: WorkTasks/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> EmployePage()
         {
-            if (id == null || _context.WorkTask == null)
-            {
-                return NotFound();
-            }
-
-            var workTask = await _context.WorkTask
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (workTask == null)
-            {
-                return NotFound();
-            }
-
-            return View(workTask);
+            return View();
         }
+
+        
 
         // GET: WorkTasks/Create
         public IActionResult Create()
@@ -121,43 +129,6 @@ namespace employeesTaskManager.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(workTask);
-        }
-
-        // GET: WorkTasks/Delete/5
-        public async Task<IActionResult> Delete(string id)
-        {
-            if (id == null || _context.WorkTask == null)
-            {
-                return NotFound();
-            }
-
-            var workTask = await _context.WorkTask
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (workTask == null)
-            {
-                return NotFound();
-            }
-
-            return View(workTask);
-        }
-
-        // POST: WorkTasks/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
-        {
-            if (_context.WorkTask == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.WorkTask'  is null.");
-            }
-            var workTask = await _context.WorkTask.FindAsync(id);
-            if (workTask != null)
-            {
-                _context.WorkTask.Remove(workTask);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool WorkTaskExists(string id)
