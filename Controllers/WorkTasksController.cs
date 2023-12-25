@@ -40,22 +40,38 @@ namespace employeesTaskManager.Controllers
             List<Employee> tempList = new List<Employee>();
             foreach (ApplicationUser item in EmployeeApplicationUsers)
             {
-                var tempEmployee = new Employee();
-                tempEmployee.Company = _context.ManageFirm.FirstOrDefault(x => x.Id == tempMU.CompanyId);
-                tempEmployee.EmployeeId = item.Id;
-                tempEmployee.Name = $"{item.FirstName} {item.LastName}";
-                tempEmployee.Email = item.Email;
-                tempEmployee.tasks = _context.WorkTask.Where(x => x.Employee == item).ToList();
-                tempList.Add(tempEmployee);
+                tempList.Add(getEmployee(item,tempMU.CompanyId));
             }
             return View(tempList);
         }
-        public async Task<IActionResult> EmployePage()
+        public async Task<IActionResult> EmployeePage(string id = null)
         {
-            return View();
+            ApplicationUser CurrentUser;
+            if (id == null) 
+            {
+                if (User.IsInRole("Manager"))
+                    return RedirectToAction("Index");
+                CurrentUser = await usrManager.FindByNameAsync(User.Identity.Name);
+            }
+            else
+            {
+                try
+                {
+                    CurrentUser = await usrManager.FindByIdAsync(id);
+                }
+                catch (Exception)
+                {
+                    return View("Error", "použivateľ sa nenašiel");
+                }
+            }
+            var tempMU = await _context.ManageUser.FirstOrDefaultAsync(x => x.UserId == CurrentUser.Id);
+            if (tempMU == null)
+                return View("Error", "Použivateľ nemá priradenú žiadnu firmu.");
+            var user = getEmployee(CurrentUser,tempMU.CompanyId);
+            return View(user);
         }
 
-        
+
 
         // GET: WorkTasks/Create
         public IActionResult Create()
@@ -134,6 +150,17 @@ namespace employeesTaskManager.Controllers
         private bool WorkTaskExists(string id)
         {
           return (_context.WorkTask?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private Employee getEmployee(ApplicationUser user, string companyId)
+        {
+            Employee res = new Employee();
+            res.Company = _context.ManageFirm.FirstOrDefault(x => x.Id == companyId);
+            res.EmployeeId = user.Id;
+            res.Name = $"{user.FirstName} {user.LastName}";
+            res.Email = user.Email;
+            res.tasks = _context.WorkTask.Where(x => x.Employee == user).ToList();
+            return res;
         }
     }
 }
