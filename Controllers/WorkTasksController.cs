@@ -10,6 +10,7 @@ using employeesTaskManager.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
+using NuGet.Packaging.Signing;
 
 namespace employeesTaskManager.Controllers
 {
@@ -40,7 +41,8 @@ namespace employeesTaskManager.Controllers
             List<Employee> tempList = new List<Employee>();
             foreach (ApplicationUser item in EmployeeApplicationUsers)
             {
-                tempList.Add(getEmployee(item,tempMU.CompanyId));
+                if(await usrManager.IsInRoleAsync(item, "Employee"))
+                    tempList.Add(getEmployee(item,tempMU.CompanyId));
             }
             return View(tempList);
         }
@@ -74,9 +76,12 @@ namespace employeesTaskManager.Controllers
 
 
         // GET: WorkTasks/Create
-        public IActionResult Create()
+        public IActionResult Create(string id = null)
         {
-            return View();
+            if(id == null)
+                RedirectToAction("Index");
+            var viewModel = new WorkTask() { EmployeeName = id, Company = _context.ManageUser.FirstOrDefault(x => x.UserId == id).CompanyId, Status = "ToDo" };
+            return View(model:viewModel);
         }
 
         // POST: WorkTasks/Create
@@ -89,6 +94,9 @@ namespace employeesTaskManager.Controllers
             if ( workTask.Company != "")
             {
                 workTask.Id = Guid.NewGuid().ToString();
+                workTask.Employee = await usrManager.FindByIdAsync(workTask.EmployeeName);
+                if (workTask.Description == null)
+                    workTask.Description = "";
                 _context.Add(workTask);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));

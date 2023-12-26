@@ -1,40 +1,142 @@
-﻿
-@model IEnumerable<employeesTaskManager.Models.Employee>
+﻿@model IEnumerable<employeesTaskManager.Models.Employee>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Manager";
 }
 
-<h1>Index</h1>
+<style>
+    .custom-body {
+        font-family: 'Arial', sans-serif;
+        background-color: #ffffff;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-@foreach (var employee in Model)
-{
-    <section>
-        <h2>@employee.Name</h2>
-        <p>Email: @employee.Email</p>
-        @{
-            List<WorkTask> toDo = employee.tasks.Where(x => x.Status == "ToDo").ToList();
-            List<WorkTask> inProgress = employee.tasks.Where(x => x.Status == "InProgress").ToList();
+    .custom-h1 {
+        color: #2c3e50;
+    }
+
+    .custom-section {
+        background-color: #ecf0f1;
+        margin: 10px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .custom-tasks-column {
+        flex-basis: 45%;
+    }
+
+
+    .custom-h2 {
+        color: #3498db;
+    }
+
+    .custom-p {
+        color: #555;
+    }
+
+    .custom-h3 {
+        color: #2ecc71;
+    }
+
+    .custom-h5 {
+        color: #e74c3c;
+    }
+
+    .custom-a {
+            color: #000000;
+        text-decoration: none;
+        margin-right: 10px;
+    }
+        .custom-a:hover {
+            color: #3498db;
         }
-        <h3>To do:</h3>
-        @for (int i = 0; i < (toDo.Count() < 6 ? toDo.Count() : 5); i++)
-        {
-            <br />
-            <h5>
-                @toDo[i].Name;
-            </h5>
+
+    .custom-edit-btn {
+        margin-right: 10px;
+    }
+    .btn-secondary{
+        background-color:aqua;
+    }
+
+    .custom-tasks-column {
+        flex-basis: 45%;
+    }
+
+    .custom-tasks-list {
+        background-color: #f0f0f0;
+        padding: 10px;
+        border-radius: 5px;
+        max-height: 170px;
+        overflow-y: auto;
+    }
+
+    .custom-tasks-list {
+        margin-right: 10px; 
+    }
+
+        .custom-tasks-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
-        <h3>In progress:</h3>
-        @for (int i = 0; i < (inProgress.Count() < 6 ? inProgress.Count() : 5); i++)
-        {
-            <br />
-            <h5>
-                @inProgress[i].Name;
-            </h5>
+
+        .custom-tasks-list li {
+            margin-bottom: 5px;
         }
-        <a asp-action="EmployeePage" asp-route-id="@employee.EmployeeId">podrobnosti</a> |
-    </section>
-}
+
+</style>
+
+<div class="custom-body">
+    <h1 class="custom-h1">Employee Management</h1>
+
+    @foreach (var employee in Model)
+    {
+        <section class="custom-section">
+            @{
+                List<WorkTask> toDo = employee.tasks.Where(x => x.Status == "ToDo").OrderBy(x => x.DeadLine).ToList();
+                List<WorkTask> inProgress = employee.tasks.Where(x => x.Status == "InProgress").OrderBy(x => x.DeadLine).ToList();
+            }
+            <div class="custom-tasks-column">
+                <h2 class="custom-h2">@employee.Name</h2>
+                <p class="custom-p">Email: @employee.Email</p>
+                <a asp-action="EmployeePage" asp-route-id="@employee.EmployeeId" class="btn btn-secondary custom-a">Details</a>
+                <a asp-action="Create" asp-route-id="@employee.EmployeeId" class="btn btn-warning custom-edit-btn">Create</a>
+            </div>
+
+            <div class="custom-tasks-column">
+                <div class="custom-tasks-list">
+                    <h3 class="custom-h3">To Do:</h3>
+                    <ul>
+                        @foreach (var task in toDo.Take(4))
+                        {
+                            string res = $"{task.Name} - do {task.DeadLine.ToString("dd/MM/yyyy")}";
+                            <li>@res</li>
+                        }
+                        @if (toDo.Count < 4){for (int i = 0; i < 4 - toDo.Count; i++){<br />}}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="custom-tasks-column">
+                <div class="custom-tasks-list">
+                    <h3 class="custom-h3">In Progress:</h3>
+                    <ul>
+                        @foreach (var task in inProgress.Take(4))
+                        {
+                            string res = $"{task.Name} - do {task.DeadLine.ToString("dd/MM/yyyy")}";
+                            <li>@res</li>
+                        }
+                        @if (inProgress.Count < 4){for (int i = 0; i < 4 - inProgress.Count; i++){<br />}}
+                    </ul>
+                </div>
+            </div>
+        </section>
+    }
+</div>
