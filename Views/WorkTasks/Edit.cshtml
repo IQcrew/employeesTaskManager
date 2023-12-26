@@ -4,56 +4,121 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<style>
+    .custom-body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f8f9fa;
+        color: #343a40;
+        margin: 0;
+        padding: 0;
+    }
 
-<h4>WorkTask</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Company" class="control-label"></label>
-                <input asp-for="Company" class="form-control" />
-                <span asp-validation-for="Company" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="DeadLine" class="control-label"></label>
-                <input asp-for="DeadLine" class="form-control" />
-                <span asp-validation-for="DeadLine" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmployeeName" class="control-label"></label>
-                <input asp-for="EmployeeName" class="form-control" />
-                <span asp-validation-for="EmployeeName" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    .custom-h1 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
+    .custom-h4 {
+        color: #3498db;
+        margin-bottom: 30px;
+    }
+
+    .custom-form {
+        background-color: #ecf0f1;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-form-group {
+        margin-bottom: 20px;
+    }
+
+    .custom-label {
+        color: #3498db;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .custom-input {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+        border: 1px solid #dfe6e9;
+        border-radius: 5px;
+        background-color: #ffffff;
+        color: #555;
+    }
+
+    .custom-submit {
+        background-color: #3498db;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .custom-submit:hover {
+            background-color: #2980b9;
+        }
+
+    .custom-a {
+        color: #3498db;
+        text-decoration: none;
+    }
+
+        .custom-a:hover {
+            color: #2980b9;
+        }
+
+    .custom-text-danger {
+        color: #e74c3c;
+    }
+</style>
+
+<div class="custom-body">
+    <h1 class="custom-h1">Edit Task</h1>
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit" class="custom-form">
+                <div asp-validation-summary="ModelOnly" class="text-danger custom-text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+
+                <div class="custom-form-group">
+                    <label asp-for="Name" class="control-label custom-label">Task Name</label>
+                    <input asp-for="Name" class="form-control custom-input" />
+                    <span asp-validation-for="Name" class="text-danger custom-text-danger"></span>
+                </div>
+
+                <div class="custom-form-group">
+                    <label asp-for="DeadLine" class="control-label custom-label">Deadline</label>
+                    <input asp-for="DeadLine" type="date" class="form-control custom-input" />
+                    <span asp-validation-for="DeadLine" class="text-danger custom-text-danger"></span>
+                </div>
+
+                <div class="custom-form-group">
+                    <label asp-for="Description" class="control-label custom-label">Task Description</label>
+                    <textarea asp-for="Description" class="form-control custom-textarea" rows="4"></textarea>
+                    <span asp-validation-for="Description" class="text-danger custom-text-danger"></span>
+                </div>
+
+                <!-- Add similar sections for other properties -->
+
+                <div class="custom-form-group">
+                    <input type="submit" value="Save" class="btn  -primary custom-submit" />
+                </div>
+            </form>
+        </div>
+    </div>
+    <br />
+    <div>
+        <a asp-action="EmployeePage" asp-route-id="@Model.EmployeeName" class="custom-a">Back to List</a>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

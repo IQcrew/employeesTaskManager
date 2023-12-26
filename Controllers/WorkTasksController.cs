@@ -101,22 +101,25 @@ namespace employeesTaskManager.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(workTask);
+
+            return RedirectToAction(nameof(EmployeePage), new { id = workTask.EmployeeName });
         }
 
         // GET: WorkTasks/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.WorkTask == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
             var workTask = await _context.WorkTask.FindAsync(id);
+
             if (workTask == null)
             {
                 return NotFound();
             }
+
             return View(workTask);
         }
 
@@ -127,32 +130,28 @@ namespace employeesTaskManager.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description,Status,Company,DeadLine,EmployeeName")] WorkTask workTask)
         {
-            if (id != workTask.Id)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(workTask);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!WorkTaskExists(workTask.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(workTask);
+            var existingWorkTask = await _context.WorkTask.FindAsync(id);
+            existingWorkTask.DeadLine = workTask.DeadLine;
+            existingWorkTask.Description = workTask.Description;
+            existingWorkTask.Name = workTask.Name;
+            _context.Update(existingWorkTask);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(EmployeePage), new { id = existingWorkTask.EmployeeName });
+        }
+        public async Task<ActionResult> Delete(string id)
+        {
+            if(id == null)
+                return RedirectToAction(nameof(EmployeePage));
+            var task = _context.WorkTask.FirstOrDefault(x => x.Id == id);
+            var EmployeeName = task.EmployeeName;
+            _context.WorkTask.Remove(task);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(EmployeePage), new { id = EmployeeName });
         }
 
         private bool WorkTaskExists(string id)

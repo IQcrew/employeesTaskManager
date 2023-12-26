@@ -73,7 +73,7 @@
         background-color: #f0f0f0;
         padding: 10px;
         border-radius: 5px;
-        max-height: 170px;
+        height: 180px;
         overflow-y: auto;
     }
 
@@ -132,7 +132,7 @@
                         {
                             string res = $"{task.Name} - do {task.DeadLine.ToString("dd/MM/yyyy")}";
                             <li>@res</li>
-                        }
+                        } 
                         @if (inProgress.Count < 4){for (int i = 0; i < 4 - inProgress.Count; i++){<br />}}
                     </ul>
                 </div>

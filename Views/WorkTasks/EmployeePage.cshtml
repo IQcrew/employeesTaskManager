@@ -1,7 +1,205 @@
-﻿@model Employee
+﻿@model employeesTaskManager.Models.Employee
+
 @{
-    ViewData["Title"] = "Main";
+    ViewData["Title"] = Model.Name;
+    List<WorkTask> ToDoTasks = Model.tasks.Where(x => x.Status == "ToDo").OrderBy(x => x.DeadLine).ToList();
+    List<WorkTask> InProgressTasks = Model.tasks.Where(x => x.Status == "InProgress").OrderBy(x => x.DeadLine).ToList();
+    List<WorkTask> DoneTasks = Model.tasks.Where(x => x.Status == "Done").OrderBy(x => x.DeadLine).ToList();
 }
 
+<style>
+    .task-columns {
+        display: flex;
+        justify-content: space-between;
+    }
 
+    .task-column {
+        flex: 1;
+        margin: 10px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
 
+    .todo-column {
+        background-color: #3498db;
+    }
+
+    .inprogress-column {
+        background-color: #2ecc71;
+    }
+
+    .done-column {
+        background-color: #e74c3c;
+    }
+
+    .task {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+        .task h3 {
+            margin: 0;
+        }
+
+        .task p {
+            margin: 5px 0;
+        }
+
+    .task-menu {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: none;
+        background-color: #fff;
+        border-radius: 5px;
+        z-index: 1;
+    }
+
+    /* Primary Button */
+    .btn-edit {
+        padding: 6px 12px; /* Adjust padding as needed */
+        margin-bottom: 5px;
+        border-radius: 6px; /* Rounded corners */
+        background-color: #007bff; /* Blue color for the primary button */
+        color: #fff; /* Text color */
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+        font-size: 14px; /* Adjust font size */
+    }
+
+        .btn-edit:hover {
+            background-color: #0056b3; /* Darker blue color on hover */
+        }
+
+    /* Danger Button */
+    .btn-delete {
+        padding: 6px 12px; /* Adjust padding as needed */
+        border-radius: 6px; /* Rounded corners */
+        background-color: #dc3545; /* Red color for the danger button */
+        color: #fff; /* Text color */
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+        font-size: 14px; /* Adjust font size */
+    }
+
+        .btn-delete:hover {
+            background-color: #c82333; /* Darker red color on hover */
+        }
+
+    background-color: #c82333; /* Darker red color on hover */
+        }
+        .task-menu a {
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            color: #fff; /* Adjust text color as needed */
+        }
+
+            .task-menu a:hover {
+                background-color: #333; /* Adjust hover background color as needed */
+            }
+    .task:hover .task-menu {
+        display: block;
+    }
+
+</style>
+
+<div class="task-columns">
+    <div class="task-column todo-column">
+        <h2>ToDo</h2>
+        @foreach (var task in ToDoTasks)
+        {
+            <div class="task">
+                <h3>@task.Name</h3>
+                <p>@task.Description</p>
+                @{
+                    int remainingDays = (int)(task.DeadLine - DateTime.Now).TotalDays;
+                    if (remainingDays < 10)
+                    {
+                        <p style="color: red;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                    else if (remainingDays > 30)
+                    {
+                        <p style="color: green;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                    else
+                    {
+                        <p style="color: orange;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                }
+                <div class="task-menu">
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="task-column inprogress-column">
+        <h2>InProgress</h2>
+        @foreach (var task in InProgressTasks)
+        {
+            <div class="task">
+                <h3>@task.Name</h3>
+                <p>@task.Description</p>
+                @{
+                    int remainingDays = (int)(task.DeadLine - DateTime.Now).TotalDays;
+                    if (remainingDays < 10)
+                    {
+                        <p style="color: red;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                    else if (remainingDays > 30)
+                    {
+                        <p style="color: green;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                    else
+                    {
+                        <p style="color: orange;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                }
+                <div class="task-menu">
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="task-column done-column">
+        <h2>Done</h2>
+        @foreach (var task in DoneTasks)
+        {
+            <div class="task">
+                <h3>@task.Name</h3>
+                <p>@task.Description</p>
+                @{
+                    int remainingDays = (int)(task.DeadLine - DateTime.Now).TotalDays;
+                    if (remainingDays < 10)
+                    {
+                        <p style="color: red;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                    else if (remainingDays > 30)
+                    {
+                        <p style="color: green;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                    else
+                    {
+                        <p style="color: orange;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
+                    }
+                }
+                <div class="task-menu">
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
