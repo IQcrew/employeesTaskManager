@@ -107,9 +107,7 @@ namespace employeesTaskManager.Controllers
                     workTask.Description = "";
                 _context.Add(workTask);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-
             return RedirectToAction(nameof(EmployeePage), new { id = workTask.EmployeeName });
         }
 
