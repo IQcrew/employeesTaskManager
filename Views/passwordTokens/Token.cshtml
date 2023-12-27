@@ -1,0 +1,95 @@
+﻿@model PasswordResetResult
+@{
+    ViewData["Title"] = "Obnovenie Hesla";
+}
+
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        html {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #495057;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .custom-container {
+            text-align: center;
+            margin: 20px;
+        }
+
+        .custom-form {
+            max-width: 400px;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .custom-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .custom-button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+            .custom-button:hover {
+                background-color: #0056b3;
+            }
+
+        .custom-error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="custom-container">
+        <h1>@ViewData["Title"]</h1>
+
+        <form asp-action="ApplyToken" class="custom-form">
+            <div>
+                <label asp-for="NewPassword" class="custom-label">Nové Heslo:</label>
+                <input asp-for="NewPassword" class="custom-input" required pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@@#$%^&*]).{8,}" />
+            </div>
+            <input type="hidden" asp-for="tokenId" />
+
+            <button type="submit" class="custom-button">Obnoviť Heslo</button>
+            <p>Minimálna dĺžka 8 znakov.</p>
+            <p>Aspoň jedno veľké písmeno.</p>
+            <p>Aspoň jedno malé písmeno.</p>
+            <p>Aspoň jedna číslica.</p>
+            <p>Aspoň jeden špeciálny znak.</p>
+        </form>
+    </div>
+
+</body>
+</html>

@@ -78,7 +78,7 @@
 
                 <div>
                     <p>
-                        <a id="forgotPassword" asp-page="./ForgotPassword">Zabudli ste heslo?</a>
+                        <a id="forgotPassword" asp-action="ChangePassword" asp-controller="passwordTokens">Zabudli ste heslo?</a>
                     </p>
                     <p>
                         <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrovať sa</a>

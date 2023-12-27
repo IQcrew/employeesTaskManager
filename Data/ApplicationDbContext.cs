@@ -13,6 +13,7 @@ namespace employeesTaskManager.Data
         public DbSet<employeesTaskManager.Models.WorkTask>? WorkTask { get; set; }
         public DbSet<employeesTaskManager.Models.ManageFirm>? ManageFirm { get; set; }
         public DbSet<employeesTaskManager.Models.ManageUser>? ManageUser { get; set; }
+        public DbSet<employeesTaskManager.Models.passwordToken>? passwordToken { get; set; }
 
         // DbSet properties for your custom entities, if any
     }

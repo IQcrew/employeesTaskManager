@@ -34,7 +34,6 @@ namespace employeesTaskManager.Controllers
             var users = _userManager.Users;
             foreach (var user in users)
             {
-                if(user.Email == "admin@admin.com") { continue; }
                 ManageUser tempUser = new ManageUser();
                 tempUser.UserId = user.Id;
                 var temp = _context.ManageUser.Where(x => x.UserId == user.Id).ToList();
@@ -141,6 +140,11 @@ namespace employeesTaskManager.Controllers
         {
             var user = await _userManager.FindByIdAsync(input.UserId);
             await changeUserFirm(input.UserId, input.CompanyId);
+            foreach (var item in _userManager.Users)
+            {
+                if (item != user && item.Email == input.Email)
+                    return View("Error","Email už existuje");
+            }
             user.Email = input.Email;
             user.FirstName = input.FirstName;
             user.LastName = input.LastName;

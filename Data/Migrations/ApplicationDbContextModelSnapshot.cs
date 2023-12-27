@@ -98,6 +98,7 @@ namespace employeesTaskManager.Data.Migrations
             modelBuilder.Entity("employeesTaskManager.Models.ManageFirm", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ContactEmail")
@@ -132,6 +133,23 @@ namespace employeesTaskManager.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ManageUser");
+                });
+
+            modelBuilder.Entity("employeesTaskManager.Models.passwordToken", b =>
+                {
+                    b.Property<string>("ID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("userId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("passwordToken");
                 });
 
             modelBuilder.Entity("employeesTaskManager.Models.WorkTask", b =>
