@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Data;
 using NuGet.Packaging.Signing;
+using Humanizer;
+using System.ComponentModel.Design;
 
 namespace employeesTaskManager.Controllers
 {
@@ -39,11 +41,19 @@ namespace employeesTaskManager.Controllers
             var firmEmployees = _context.ManageUser.Where(x => x.CompanyId == tempMU.CompanyId);
             var EmployeeApplicationUsers = usrManager.Users.Where(x => firmEmployees.Any(y => y.UserId == x.Id));
             List<Employee> tempList = new List<Employee>();
+            List<string> Mngrs = new List<string>();
             foreach (ApplicationUser item in EmployeeApplicationUsers)
             {
-                if(await usrManager.IsInRoleAsync(item, "Employee"))
-                    tempList.Add(getEmployee(item,tempMU.CompanyId));
+                if (await usrManager.IsInRoleAsync(item, "Employee"))
+                    tempList.Add(getEmployee(item, tempMU.CompanyId));
+                else if (await usrManager.IsInRoleAsync(item, "Manager"))
+                    Mngrs.Add($"{item.FirstName} {item.LastName}");
             }
+            if (tempList.Count() < 1)
+            {
+                tempList.Add(new Employee() { Company = _context.ManageFirm.FirstOrDefault(x => x.Id == tempMU.CompanyId) });
+            }
+            tempList[0].Managers = Mngrs;
             return View(tempList);
         }
         public async Task<IActionResult> EmployeePage(string id = null)
@@ -75,7 +85,7 @@ namespace employeesTaskManager.Controllers
 
 
 
-        // GET: WorkTasks/Create
+        [Authorize(Roles = "Manager")]
         public IActionResult Create(string id = null)
         {
             if(id == null)
@@ -84,9 +94,7 @@ namespace employeesTaskManager.Controllers
             return View(model:viewModel);
         }
 
-        // POST: WorkTasks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,Status,Company,DeadLine,EmployeeName")] WorkTask workTask)
@@ -105,7 +113,7 @@ namespace employeesTaskManager.Controllers
             return RedirectToAction(nameof(EmployeePage), new { id = workTask.EmployeeName });
         }
 
-        // GET: WorkTasks/Edit/5
+        [Authorize(Roles = "Manager")]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null)
@@ -123,9 +131,7 @@ namespace employeesTaskManager.Controllers
             return View(workTask);
         }
 
-        // POST: WorkTasks/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Manager")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Description,Status,Company,DeadLine,EmployeeName")] WorkTask workTask)
@@ -143,6 +149,8 @@ namespace employeesTaskManager.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(EmployeePage), new { id = existingWorkTask.EmployeeName });
         }
+
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult> Delete(string id)
         {
             if(id == null)
@@ -153,7 +161,18 @@ namespace employeesTaskManager.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(EmployeePage), new { id = EmployeeName });
         }
-
+        [HttpPost]
+        public IActionResult UpdateStatus(string taskId, string newStatus)
+        {
+            if(newStatus != "")
+            {
+                WorkTask myTask = _context.WorkTask.FirstOrDefault(x => x.Id == taskId);
+                myTask.Status = newStatus;
+                _context.WorkTask.Update(myTask);
+                _context.SaveChanges();
+            }
+            return Json(new { success = true });
+        }
         private bool WorkTaskExists(string id)
         {
           return (_context.WorkTask?.Any(e => e.Id == id)).GetValueOrDefault();

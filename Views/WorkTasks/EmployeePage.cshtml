@@ -1,5 +1,8 @@
 ﻿@model employeesTaskManager.Models.Employee
 
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UsrManager
+
 @{
     ViewData["Title"] = Model.Name;
     List<WorkTask> ToDoTasks = Model.tasks.Where(x => x.Status == "ToDo").OrderBy(x => x.DeadLine).ToList();
@@ -54,7 +57,7 @@
     .task-menu {
         position: absolute;
         top: 10px;
-        right: 10px;
+        right: 10px; 
         display: none;
         background-color: #fff;
         border-radius: 5px;
@@ -110,14 +113,49 @@
         display: block;
     }
 
-</style>
+    .employee-header {
+        text-align: center;
+        padding: 20px;
+        background-color: #007bff; /* Blue color for the header */
+        color: #fff;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
 
+    /* Improved styles for the create button */
+    .btn-create {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 8px;
+        background-color: #28a745; /* Green color for the create button */
+        color: #fff;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s;
+    }
+
+        .btn-create:hover {
+            background-color: #218838; /* Darker green color on hover */
+        }
+</style>
+<div class="employee-header">
+    <h1>@Model.Name</h1>
+    <p>Email: @Model.Email</p>
+    @{
+        var user = await UsrManager.FindByNameAsync(User.Identity.Name);
+        bool hasManagerRole = await UsrManager.IsInRoleAsync(user, "Manager");
+        if (hasManagerRole)
+        {
+            <a asp-action="Create" asp-route-id="@Model.EmployeeId" class="btn-create">Create Task</a>
+        }
+    }
+</div>
 <div class="task-columns">
-    <div class="task-column todo-column">
+    <div class="task-column todo-column" ondragover="allowDrop(event)" ondrop="drop(event)" >
         <h2>ToDo</h2>
         @foreach (var task in ToDoTasks)
         {
-            <div class="task">
+            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id" >
                 <h3>@task.Name</h3>
                 <p>@task.Description</p>
                 @{
@@ -143,11 +181,11 @@
         }
     </div>
 
-    <div class="task-column inprogress-column">
+    <div class="task-column inprogress-column" ondragover="allowDrop(event)" ondrop="drop(event)">
         <h2>InProgress</h2>
         @foreach (var task in InProgressTasks)
         {
-            <div class="task">
+            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id" >
                 <h3>@task.Name</h3>
                 <p>@task.Description</p>
                 @{
@@ -173,11 +211,11 @@
         }
     </div>
 
-    <div class="task-column done-column">
+    <div class="task-column done-column" ondragover="allowDrop(event)" ondrop="drop(event)">
         <h2>Done</h2>
         @foreach (var task in DoneTasks)
         {
-            <div class="task">
+            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id" >
                 <h3>@task.Name</h3>
                 <p>@task.Description</p>
                 @{
@@ -195,11 +233,74 @@
                         <p style="color: orange;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
                     }
                 }
-                <div class="task-menu">
-                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
-                </div>
+                @if (hasManagerRole)
+                {
+                    <div class="task-menu">
+                        <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
+                    </div>
+                }
             </div>
         }
     </div>
 </div>
+<script>
+    function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+    }
+
+    function allowDrop(ev) {
+        ev.preventDefault();
+    }
+
+    function drop(ev) {
+        ev.preventDefault();
+        var data = ev.dataTransfer.getData("text");
+        var draggedElement = document.getElementById(data);
+        var dropZone = ev.target;
+
+        // Find the parent task column
+        while (dropZone && !dropZone.classList.contains("task-column")) {
+            dropZone = dropZone.parentElement;
+        }
+
+        // Move the task to the new column
+        if (dropZone) {
+            var taskId = draggedElement.id;
+            dropZone.appendChild(draggedElement);
+
+            // Update the task status based on the column
+            var newStatus = dropZone.classList.contains("todo-column")
+                ? "ToDo"
+                : dropZone.classList.contains("inprogress-column")
+                    ? "InProgress"
+                    : dropZone.classList.contains("done-column")
+                        ? "Done"
+                        : "";
+
+            // Send an AJAX request to update the task status on the server
+            updateTaskStatus(taskId, newStatus);
+        }
+    }
+
+    function updateTaskStatus(taskId, newStatus) {
+        // Perform an AJAX request to update the task status on the server
+        // You can use fetch or another AJAX library here
+        // Example:
+        
+        fetch(`../../WorkTasks/UpdateStatus?taskId=${taskId}&newStatus=${newStatus}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                taskId: taskId,
+                newStatus: newStatus,
+            }),
+        })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error('Error:', error));
+        
+    }
+</script>

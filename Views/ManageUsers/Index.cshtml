@@ -6,7 +6,6 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
 <form asp-action="SearchResults">
     <label for="searchInput">Search:</label>
     <input type="text" name="searchString" >
@@ -24,6 +23,9 @@
             </th>
             <th>
                 Firma
+            </th>
+            <th>
+                Role
             </th>
             <th>
                 
@@ -45,11 +47,25 @@
                 @name
                 </td>
                 <td>
-                        @Html.DisplayFor(modelItem => UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId).Email)
+                    @{
+                        var user = UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId);
+                    }
+                        @Html.DisplayFor(modelItem => user.Email)
                 </td>
                 <td>
                     @item.CompanyId
                 </td>
+                <th>
+                    @{
+                        var resRole = "";
+                        foreach (var role in new string[]{"Admin", "Manager","Employee"})
+                        {
+                            if (await UsrManager.IsInRoleAsync(user, role))
+                                resRole = role;
+                        }
+                    }
+                    @resRole
+                </th>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
                     <a asp-action="Delete" asp-route-id="@item.UserId" style="color: red;">Delete</a>
