@@ -57,7 +57,7 @@
     .task-menu {
         position: absolute;
         top: 10px;
-        right: 10px; 
+        right: 10px;
         display: none;
         background-color: #fff;
         border-radius: 5px;
@@ -69,7 +69,7 @@
         padding: 6px 12px; /* Adjust padding as needed */
         margin-bottom: 5px;
         border-radius: 6px; /* Rounded corners */
-        background-color: #007bff; /* Blue color for the primary button */
+        background-color: #007bff; /* Modrá farba pre primárne tlačidlo */
         color: #fff; /* Text color */
         text-decoration: none;
         display: inline-block;
@@ -78,14 +78,14 @@
     }
 
         .btn-edit:hover {
-            background-color: #0056b3; /* Darker blue color on hover */
+            background-color: #0056b3; /* Tmavšia modrá farba pri najazdení */
         }
 
     /* Danger Button */
     .btn-delete {
         padding: 6px 12px; /* Adjust padding as needed */
         border-radius: 6px; /* Rounded corners */
-        background-color: #dc3545; /* Red color for the danger button */
+        background-color: #dc3545; /* Červená farba pre nebezpečné tlačidlo */
         color: #fff; /* Text color */
         text-decoration: none;
         display: inline-block;
@@ -94,21 +94,20 @@
     }
 
         .btn-delete:hover {
-            background-color: #c82333; /* Darker red color on hover */
+            background-color: #c82333; /* Tmavšia červená farba pri najazdení */
         }
 
-    background-color: #c82333; /* Darker red color on hover */
-        }
-        .task-menu a {
-            display: block;
-            padding: 10px;
-            text-decoration: none;
-            color: #fff; /* Adjust text color as needed */
+    .task-menu a {
+        display: block;
+        padding: 10px;
+        text-decoration: none;
+        color: #fff; /* Adjust text color as needed */
+    }
+
+        .task-menu a:hover {
+            background-color: #333; /* Adjust hover background color as needed */
         }
 
-            .task-menu a:hover {
-                background-color: #333; /* Adjust hover background color as needed */
-            }
     .task:hover .task-menu {
         display: block;
     }
@@ -116,18 +115,18 @@
     .employee-header {
         text-align: center;
         padding: 20px;
-        background-color: #007bff; /* Blue color for the header */
+        background-color: #007bff; /* Modrá farba pre hlavičku */
         color: #fff;
         border-radius: 10px;
         margin-bottom: 20px;
     }
 
-    /* Improved styles for the create button */
+    /* Vylepšené štýly pre tlačidlo Create */
     .btn-create {
         padding: 12px 24px;
         border: none;
         border-radius: 8px;
-        background-color: #28a745; /* Green color for the create button */
+        background-color: #28a745; /* Zelená farba pre tlačidlo Create */
         color: #fff;
         text-decoration: none;
         display: inline-block;
@@ -135,9 +134,10 @@
     }
 
         .btn-create:hover {
-            background-color: #218838; /* Darker green color on hover */
+            background-color: #218838; /* Tmavšia zelená farba pri najazdení */
         }
 </style>
+
 <div class="employee-header">
     <h1>@Model.Name</h1>
     <p>Email: @Model.Email</p>
@@ -146,16 +146,17 @@
         bool hasManagerRole = await UsrManager.IsInRoleAsync(user, "Manager");
         if (hasManagerRole)
         {
-            <a asp-action="Create" asp-route-id="@Model.EmployeeId" class="btn-create">Create Task</a>
+            <a asp-action="Create" asp-route-id="@Model.EmployeeId" class="btn-create">Vytvoriť Úlohu</a>
         }
     }
 </div>
+
 <div class="task-columns">
-    <div class="task-column todo-column" ondragover="allowDrop(event)" ondrop="drop(event)" >
-        <h2>ToDo</h2>
+    <div class="task-column todo-column" ondragover="allowDrop(event)" ondrop="drop(event)">
+        <h2>Na vykonanie</h2>
         @foreach (var task in ToDoTasks)
         {
-            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id" >
+            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id">
                 <h3>@task.Name</h3>
                 <p>@task.Description</p>
                 @{
@@ -174,18 +175,18 @@
                     }
                 }
                 <div class="task-menu">
-                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Upraviť</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Vymazať</a>
                 </div>
             </div>
         }
     </div>
 
     <div class="task-column inprogress-column" ondragover="allowDrop(event)" ondrop="drop(event)">
-        <h2>InProgress</h2>
+        <h2>V procese</h2>
         @foreach (var task in InProgressTasks)
         {
-            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id" >
+            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id">
                 <h3>@task.Name</h3>
                 <p>@task.Description</p>
                 @{
@@ -204,18 +205,18 @@
                     }
                 }
                 <div class="task-menu">
-                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Upraviť</a>
+                    <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Vymazať</a>
                 </div>
             </div>
         }
     </div>
 
     <div class="task-column done-column" ondragover="allowDrop(event)" ondrop="drop(event)">
-        <h2>Done</h2>
+        <h2>Hotovo</h2>
         @foreach (var task in DoneTasks)
         {
-            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id" >
+            <div class="task" draggable="true" ondragstart="drag(event)" id="@task.Id">
                 <h3>@task.Name</h3>
                 <p>@task.Description</p>
                 @{
@@ -236,14 +237,15 @@
                 @if (hasManagerRole)
                 {
                     <div class="task-menu">
-                        <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Delete</a>
+                        <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Upraviť</a>
+                        <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Vymazať</a>
                     </div>
                 }
             </div>
         }
     </div>
 </div>
+
 <script>
     function drag(ev) {
         ev.dataTransfer.setData("text", ev.target.id);
@@ -287,7 +289,7 @@
         // Perform an AJAX request to update the task status on the server
         // You can use fetch or another AJAX library here
         // Example:
-        
+
         fetch(`../../WorkTasks/UpdateStatus?taskId=${taskId}&newStatus=${newStatus}`, {
             method: 'POST',
             headers: {
@@ -298,9 +300,9 @@
                 newStatus: newStatus,
             }),
         })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error('Error:', error));
-        
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+
     }
 </script>

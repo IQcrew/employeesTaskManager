@@ -3,74 +3,178 @@
 @inject UserManager<ApplicationUser> UsrManager
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Zoznam použivateľov";
 }
 
-<form asp-action="SearchResults">
-    <label for="searchInput">Search:</label>
-    <input type="text" name="searchString" >
-    <button type="submit">Search</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyJq27E8h2h2VaJ3a0QiMdpdP0DGIjS6b6"
+          crossorigin="anonymous" />
+    <style>
+        .custom-page {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 2rem 0;
+            padding: 2rem 0;
+        }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Meno
-            </th>
-            <th>
-                Email
-            </th>
-            <th>
-                Firma
-            </th>
-            <th>
-                Role
-            </th>
-            <th>
-                
-            </th>
-            <th>
+        .custom-title {
+            color: #007bff;
+            margin-bottom: 1.5rem;
+        }
 
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
+        .custom-table {
+            margin-top: 1.5rem;
+        }
 
-            <tr>
-                <td>
-                    @{
-                        var tempUser = UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId);
-                        string name = $"{tempUser.FirstName} {tempUser.LastName}";
-                    }
-                @name
-                </td>
-                <td>
-                    @{
-                        var user = UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId);
-                    }
-                        @Html.DisplayFor(modelItem => user.Email)
-                </td>
-                <td>
-                    @item.CompanyId
-                </td>
-                <th>
-                    @{
-                        var resRole = "";
-                        foreach (var role in new string[]{"Admin", "Manager","Employee"})
-                        {
-                            if (await UsrManager.IsInRoleAsync(user, role))
-                                resRole = role;
-                        }
-                    }
-                    @resRole
-                </th>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.UserId">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.UserId" style="color: red;">Delete</a>
-                </td>
-        </tr>
-}
-    </tbody>
-</table>
+        .custom-form {
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: flex-start
+            
+        }
+
+            .custom-form label {
+                margin-right: 0.5rem;
+            }
+
+            .custom-form input {
+                width: 60%;
+                padding: 0.5rem;
+                border: 1px solid #ced4da;
+                border-radius: 0.25rem;
+                transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+            }
+
+            .custom-form button {
+                width: 30%;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                padding: 0.5rem 1rem;
+                cursor: pointer;
+                border-radius: 0.25rem;
+                transition: background-color 0.15s ease-in-out;
+            }
+
+                .custom-form button:hover {
+                    background-color: #0056b3;
+                }
+
+        .custom-link {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 0.5rem;
+        }
+
+            .custom-link:hover {
+                text-decoration: underline;
+            }
+
+        .custom-delete-link {
+            color: red;
+            text-decoration: none;
+        }
+
+            .custom-delete-link:hover {
+                text-decoration: underline;
+            }
+
+        .searchText {
+            font-family: 'YourChosenFont', sans-serif; 
+            font-size: 30px; 
+        }
+    </style>
+</head>
+<body class="custom-page">
+
+    <div class="container">
+        <h1 class="custom-title">@ViewData["Title"]</h1>
+
+        <form asp-action="SearchResults" class="custom-form">
+            <label class="searchText" for="searchInput">Hľadať:</label>
+            <input type="text" name="searchString" class="form-control" style="margin-right:10px; width:300px" />
+            <button type="submit" class="btn btn-primary" style="margin-right:300px; width:120px">Hľadať</button>
+        </form>
+
+        <table class="table custom-table">
+            <thead>
+                <tr>
+                    <th>
+                        Meno
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Firma
+                    </th>
+                    <th>
+                        Role
+                    </th>
+                    <th>
+
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @{
+                                var tempUser = UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId);
+                                string name = $"{tempUser.FirstName} {tempUser.LastName}";
+                            }
+                            @name
+                        </td>
+                        <td>
+                            @{
+                                var user = UsrManager.Users.FirstOrDefault(x => x.Id == item.UserId);
+                            }
+                            @Html.DisplayFor(modelItem => user.Email)
+                        </td>
+                        <td>
+                            @item.CompanyId
+                        </td>
+                        <td>
+                            @{
+                                var resRole = "";
+                                foreach (var role in new string[] { "Admin", "Manager", "Employee" })
+                                {
+                                    if (await UsrManager.IsInRoleAsync(user, role))
+                                        resRole = role;
+                                }
+                            }
+                            @resRole
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.UserId" class="custom-link">Upraviť</a> |
+                            <a asp-action="Delete" asp-route-id="@item.UserId" class="custom-delete-link">Vymazať</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@2.9.3/dist/umd/popper.min.js"
+            integrity="sha384-sKs6HF4i6tB56oR/X0BBbMMbUpJGcUtnOfAWrF1iTRdSMtb8Op7zAx4I4skaynVG"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyJq27E8h2h2VaJ3a0QiMdpdP0DGIjS6b6"
+            crossorigin="anonymous"></script>
+</body>
+</html>

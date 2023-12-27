@@ -1,7 +1,7 @@
 ﻿@model employeesTaskManager.Models.WorkTask
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Upraviť";
 }
 
 <style>
@@ -78,7 +78,7 @@
 </style>
 
 <div class="custom-body">
-    <h1 class="custom-h1">Edit Task</h1>
+    <h1 class="custom-h1">Upraviť Úlohu</h1>
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Edit" class="custom-form">
@@ -86,19 +86,19 @@
                 <input type="hidden" asp-for="Id" />
 
                 <div class="custom-form-group">
-                    <label asp-for="Name" class="control-label custom-label">Task Name</label>
+                    <label asp-for="Name" class="control-label custom-label">Názov Úlohy</label>
                     <input asp-for="Name" class="form-control custom-input" />
                     <span asp-validation-for="Name" class="text-danger custom-text-danger"></span>
                 </div>
 
                 <div class="custom-form-group">
-                    <label asp-for="DeadLine" class="control-label custom-label">Deadline</label>
+                    <label asp-for="DeadLine" class="control-label custom-label">Termín</label>
                     <input asp-for="DeadLine" type="date" class="form-control custom-input" />
                     <span asp-validation-for="DeadLine" class="text-danger custom-text-danger"></span>
                 </div>
 
                 <div class="custom-form-group">
-                    <label asp-for="Description" class="control-label custom-label">Task Description</label>
+                    <label asp-for="Description" class="control-label custom-label">Popis Úlohy</label>
                     <textarea asp-for="Description" class="form-control custom-textarea" rows="4"></textarea>
                     <span asp-validation-for="Description" class="text-danger custom-text-danger"></span>
                 </div>
@@ -106,14 +106,14 @@
                 <!-- Add similar sections for other properties -->
 
                 <div class="custom-form-group">
-                    <input type="submit" value="Save" class="btn  -primary custom-submit" />
+                    <input type="submit" value="Uložiť" class="btn  -primary custom-submit" />
                 </div>
             </form>
         </div>
     </div>
     <br />
     <div>
-        <a asp-action="EmployeePage" asp-route-id="@Model.EmployeeName" class="custom-a">Back to List</a>
+        <a asp-action="EmployeePage" asp-route-id="@Model.EmployeeName" class="custom-a">Späť na Zoznam</a>
     </div>
 </div>
 

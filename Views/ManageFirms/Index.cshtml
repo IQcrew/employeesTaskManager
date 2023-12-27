@@ -1,40 +1,135 @@
 ﻿@model IEnumerable<employeesTaskManager.Models.ManageFirm>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Zoznam firem";
 }
 
-<h1>Index</h1>
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        .custom-body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 2rem 0;
+            padding: 2rem 0;
+        }
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ContactEmail)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ContactEmail)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        .custom-h1 {
+            color: #007bff;
+            margin-bottom: 1.5rem;
+        }
+
+        .custom-container {
+            margin-top: 1.5rem;
+        }
+
+        .custom-link {
+            color: #007bff;
+            text-decoration: none;
+            margin-right: 0.5rem;
+        }
+
+            .custom-link:hover {
+                text-decoration: underline;
+            }
+
+        .custom-delete-link {
+            color: red;
+            text-decoration: none;
+        }
+
+            .custom-delete-link:hover {
+                text-decoration: underline;
+            }
+
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+
+            .custom-table th,
+            .custom-table td {
+                border: 1px solid #dee2e6;
+                padding: 8px;
+                text-align: left;
+            }
+
+            .custom-table th {
+                background-color: #007bff;
+                color: #fff;
+            }
+
+            .custom-table tr:nth-child(even) {
+                background-color: #f8f9fa;
+            }
+            .center{
+                display:flex;
+                justify-content:space-around;
+                width:100%;
+            }
+
+        .custom-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            text-align: center;
+            text-decoration: none;
+            background-color: #3498db; /* Set the background color */
+            color: #fff; /* Set the text color */
+            border-radius: 5px; /* Add some border radius for rounded corners */
+            transition: background-color 0.3s ease; /* Add a smooth transition effect */
+        }
+
+            .custom-button:hover {
+                background-color: #2980b9; /* Change the background color on hover */
+            }
+    </style>
+</head>
+<body class="custom-body">
+
+    <div class="custom-container">
+        <h1 class="custom-h1">Firmy</h1>
+
+        <p>
+            <a asp-action="Create" class="custom-button">Vytvoriť novú firmu</a>
+        </p>
+
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.ContactEmail)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ContactEmail)
+                        </td>
+                        <td class="center">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="custom-link">Upraviť</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="custom-delete-link">Vymazať</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

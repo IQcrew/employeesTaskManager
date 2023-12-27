@@ -1,7 +1,7 @@
 ﻿@model employeesTaskManager.Models.WorkTask
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Vytvoriť";
 }
 
 <style>
@@ -78,7 +78,7 @@
 </style>
 
 <div class="custom-body">
-    <h1 class="custom-h1">Create new task</h1>
+    <h1 class="custom-h1">Vytvoriť novú úlohu</h1>
     <div class="row">
         <div class="col-md-4">
             <form asp-action="Create" class="custom-form">
@@ -89,35 +89,35 @@
                 <input type="hidden" asp-for="Status" class="form-control custom-input" readonly />
 
                 <div class="custom-form-group">
-                    <label asp-for="Name" class="control-label custom-label">Task Name</label>
+                    <label asp-for="Name" class="control-label custom-label">Názov úlohy</label>
                     <input asp-for="Name" class="form-control custom-input" />
                     <span asp-validation-for="Name" class="text-danger custom-text-danger"></span>
                 </div>
 
                 <div class="custom-form-group">
-                    <label asp-for="DeadLine" class="control-label custom-label">Deadline</label>
+                    <label asp-for="DeadLine" class="control-label custom-label">Termín</label>
                     <input asp-for="DeadLine" type="date" class="form-control custom-input" id="deadlineInput" />
                     <span asp-validation-for="DeadLine" class="text-danger custom-text-danger"></span>
                 </div>
 
                 <div class="custom-form-group">
-                    <label asp-for="Description" class="control-label custom-label">Task Description</label>
+                    <label asp-for="Description" class="control-label custom-label">Popis úlohy</label>
                     <textarea asp-for="Description" class="form-control custom-textarea" rows="4"></textarea>
                     <span asp-validation-for="Description" class="text-danger custom-text-danger"></span>
                 </div>
 
                 <div class="custom-form-group">
-                    <input type="submit" value="Create" class="btn btn-primary custom-submit" />
+                    <input type="submit" value="Vytvoriť" class="btn btn-primary custom-submit" />
                 </div>
             </form>
         </div>
     </div>
     <br />
     <div>
-        <a asp-action="EmployeePage" asp-route-id="@Model.EmployeeName" class="custom-a">Back to List</a>
+        <a asp-action="EmployeePage" asp-route-id="@Model.EmployeeName" class="custom-a">Späť na Zoznam</a>
     </div>
     <script>
-        // Set default value to the current date
+        // Nastaviť predvolenú hodnotu na aktuálny dátum
         document.getElementById('deadlineInput').valueAsDate = new Date();
     </script>
 </div>

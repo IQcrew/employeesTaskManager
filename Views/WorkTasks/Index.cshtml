@@ -1,7 +1,7 @@
 ﻿@model List<employeesTaskManager.Models.Employee>
 
 @{
-    ViewData["Title"] = "Manager";
+    ViewData["Title"] = "Manažér";
 }
 
 <style>
@@ -22,7 +22,7 @@
         margin: 10px;
         padding: 15px;
         border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -31,7 +31,6 @@
     .custom-tasks-column {
         flex-basis: 45%;
     }
-
 
     .custom-h2 {
         color: #3498db;
@@ -50,10 +49,11 @@
     }
 
     .custom-a {
-            color: #000000;
+        color: #000000;
         text-decoration: none;
         margin-right: 10px;
     }
+
         .custom-a:hover {
             color: #3498db;
         }
@@ -61,8 +61,9 @@
     .custom-edit-btn {
         margin-right: 10px;
     }
-    .btn-secondary{
-        background-color:aqua;
+
+    .btn-secondary {
+        background-color: aqua;
     }
 
     .custom-tasks-column {
@@ -78,7 +79,7 @@
     }
 
     .custom-tasks-list {
-        margin-right: 10px; 
+        margin-right: 10px;
     }
 
         .custom-tasks-list ul {
@@ -94,7 +95,7 @@
     .company-header {
         text-align: center;
         padding: 20px;
-        background-color: #3498db; /* Blue color for the header */
+        background-color: #3498db; /* Modrá farba pre hlavičku */
         color: #fff;
         border-radius: 10px;
         margin-bottom: 20px;
@@ -105,10 +106,8 @@
     <div class="company-header">
         <h1>@Model[0].Company.Name</h1>
         <p>Email: @Model[0].Company.ContactEmail</p>
-        <p>Managers: @string.Join(", ", Model[0].Managers)</p>
-        
+        <p>Manažéri: @string.Join(", ", Model[0].Managers)</p>
     </div>
-
 
     @if (Model[0].Email != null)
     {
@@ -122,13 +121,13 @@
                 <div class="custom-tasks-column">
                     <h2 class="custom-h2">@employee.Name</h2>
                     <p class="custom-p">Email: @employee.Email</p>
-                    <a asp-action="EmployeePage" asp-route-id="@employee.EmployeeId" class="btn btn-secondary custom-a">Details</a>
-                    <a asp-action="Create" asp-route-id="@employee.EmployeeId" class="btn btn-warning custom-edit-btn">Create</a>
+                    <a asp-action="EmployeePage" asp-route-id="@employee.EmployeeId" class="btn btn-secondary custom-a">Detaily</a>
+                    <a asp-action="Create" asp-route-id="@employee.EmployeeId" class="btn btn-warning custom-edit-btn">Vytvoriť</a>
                 </div>
 
                 <div class="custom-tasks-column">
                     <div class="custom-tasks-list">
-                        <h3 class="custom-h3">To Do:</h3>
+                        <h3 class="custom-h3">Na vykonanie:</h3>
                         <ul>
                             @foreach (var task in toDo.Take(4))
                             {
@@ -140,26 +139,28 @@
                                 for (int i = 0; i < 4 - toDo.Count; i++)
                                 {
                                     <br />
-                                }}
+                                }
+                            }
                         </ul>
                     </div>
                 </div>
 
                 <div class="custom-tasks-column">
                     <div class="custom-tasks-list">
-                        <h3 class="custom-h3">In Progress:</h3>
+                        <h3 class="custom-h3">Vo vykone:</h3>
                         <ul>
                             @foreach (var task in inProgress.Take(4))
                             {
                                 string res = $"{task.Name} - do {task.DeadLine.ToString("dd/MM/yyyy")}";
                                 <li>@res</li>
-                            } 
+                            }
                             @if (inProgress.Count < 4)
                             {
                                 for (int i = 0; i < 4 - inProgress.Count; i++)
                                 {
                                     <br />
-                                }}
+                                }
+                            }
                         </ul>
                     </div>
                 </div>
