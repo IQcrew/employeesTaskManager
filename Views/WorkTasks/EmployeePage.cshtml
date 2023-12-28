@@ -174,10 +174,13 @@
                         <p style="color: orange;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
                     }
                 }
+                @if (hasManagerRole)
+                {  
                 <div class="task-menu">
                     <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Upraviť</a>
                     <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Vymazať</a>
                 </div>
+                }
             </div>
         }
     </div>
@@ -204,10 +207,13 @@
                         <p style="color: orange;">Do: @task.DeadLine.ToString("dd/MM/yyyy"), Ostáva: @remainingDays dní</p>
                     }
                 }
+                @if (hasManagerRole)
+                {  
                 <div class="task-menu">
                     <a asp-action="Edit" asp-route-id="@task.Id" class="btn-edit">Upraviť</a>
                     <a asp-action="Delete" asp-route-id="@task.Id" class="btn-delete">Vymazať</a>
                 </div>
+                }
             </div>
         }
     </div>
