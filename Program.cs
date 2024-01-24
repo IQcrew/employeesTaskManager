@@ -5,7 +5,11 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
+// Update the connection string by replacing [DataDirectory] with the base directory
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    .Replace("[DataDirectory]", baseDirectory);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
